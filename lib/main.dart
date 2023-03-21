@@ -184,34 +184,52 @@ class _ContentState extends State<Content> {
                   final layer = Sphere.SphereObject("Layer", args: [
                     "0",
                     {
+                      // "type": Sphere.SphereStatic("LayerType", "WMS"),
+                      // "url": adminBoundary,
+                      // "opacity": 0.5,
+                      // "zindex": 20,
+                      // "bound": {
+                      //   "minLon": 97.293700,
+                      //   "minLat": 5.562738,
+                      //   "maxLon": 105.686780,
+                      //   "maxLat": 20.514644
+                      // },
+                      // "id": "unique_1",
                       "type": Sphere.SphereStatic("LayerType", "WMS"),
-                      "url": adminBoundary,
-                      "opacity": 0.5,
-                      "zindex": 1,
-                      "bound": {
-                        "minLon": 97.293700,
-                        "minLat": 5.562738,
-                        "maxLon": 105.686780,
-                        "maxLat": 20.514644
-                      }
+                      "opacity": 0.8,
+
+                      "url":
+                          "https://gistdaportal.gistda.or.th/data/services/pm_check/pm25_hourly_raster/MapServer/WMSServer",
+                      // "zoomRange": {"min": 1, "max": 9},
+                      "zIndex": 5,
+                      "id": "unique_1",
                     }
                   ]);
-                  // if (layer != null) {
-                  //   widget.map.currentState?.call("Layers.add", args: [layer]);
-                  // }
+                  if (layer != null) {
+                    widget.map.currentState?.call("Layers.add", args: [layer]);
+                  }
 
                   final layer2 = Sphere.SphereObject("Layer", args: [
                     "0",
                     {
+                      // "type": Sphere.SphereStatic("LayerType", "WMS"),
+                      // "url": pmMap,
+                      // "zindex": 10,
+                      // "bound": {
+                      //   "minLon": 97.293700,
+                      //   "minLat": 5.562738,
+                      //   "maxLon": 105.686780,
+                      //   "maxLat": 20.514644
+                      // },
+                      // "id": "unique_2",
                       "type": Sphere.SphereStatic("LayerType", "WMS"),
-                      "url": pmMap,
-                      "zindex": 50,
-                      "bound": {
-                        "minLon": 97.293700,
-                        "minLat": 5.562738,
-                        "maxLon": 105.686780,
-                        "maxLat": 20.514644
-                      }
+                      "opacity": 0.5,
+
+                      "url":
+                          "https://gistdaportal.gistda.or.th/data/services/L05_AdminBoundary/L05_Province_GISTDA_50k/MapServer/WMSServer",
+                      // "zoomRange": {"min": 1, "max": 9},
+                      "zIndex": 10,
+                      "id": "unique_2",
                     },
                   ]);
                   if (layer2 != null) {
