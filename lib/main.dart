@@ -117,7 +117,9 @@ class _ContentState extends State<Content> {
     var marker;
 
     String adminBoundary =
-        'https://gistdaportal.gistda.or.th/data/rest/services/L05_AdminBoundary/L05_Province_GISTDA_50k/MapServer/0';
+        'https://gistdaportal.gistda.or.th/data/services/L05_AdminBoundary/L05_Province_GISTDA_50k/MapServer/WMSServer';
+    String pmMap =
+        'https://gistdaportal.gistda.or.th/data/services/pm_check/pm25_hourly_raster/MapServer/WMSServer';
 
     return Scaffold(
       appBar: AppBar(
@@ -136,6 +138,8 @@ class _ContentState extends State<Content> {
               JavascriptChannel(
                 name: 'Ready',
                 onMessageReceived: (_) {
+                  widget.map.currentState?.call("Layers.setBase",
+                      args: [Sphere.SphereStatic("Layers", "SIMPLE")]);
                   widget.map.currentState
                       ?.call("Ui.LayerSelector.visible", args: [false]);
                   widget.map.currentState
@@ -160,11 +164,14 @@ class _ContentState extends State<Content> {
                             "height": 20,
                           },
                         },
-                        "draggable": true
+                        //   "draggable": true
                       },
                     ],
                   );
-                  widget.map.currentState?.call("Overlays.add", args: [marker]);
+                  if (marker != null) {
+                    widget.map.currentState
+                        ?.call("Overlays.add", args: [marker]);
+                  }
                   widget.map.currentState?.call("bound", args: [
                     {
                       "minLon": 97.143,
@@ -175,13 +182,12 @@ class _ContentState extends State<Content> {
                   ]);
 
                   final layer = Sphere.SphereObject("Layer", args: [
-                    "L05_Province_GISTDA_50k",
+                    "0",
                     {
                       "type": Sphere.SphereStatic("LayerType", "WMS"),
                       "url": adminBoundary,
-                      "srs": " EPSG:3857",
                       "opacity": 0.5,
-                      "zindex": 10,
+                      "zindex": 1,
                       "bound": {
                         "minLon": 97.293700,
                         "minLat": 5.562738,
@@ -190,35 +196,30 @@ class _ContentState extends State<Content> {
                       }
                     }
                   ]);
-                  widget.map.currentState?.call("Layers.add", args: [layer]);
+                  // if (layer != null) {
+                  //   widget.map.currentState?.call("Layers.add", args: [layer]);
+                  // }
+
+                  final layer2 = Sphere.SphereObject("Layer", args: [
+                    "0",
+                    {
+                      "type": Sphere.SphereStatic("LayerType", "WMS"),
+                      "url": pmMap,
+                      "zindex": 50,
+                      "bound": {
+                        "minLon": 97.293700,
+                        "minLat": 5.562738,
+                        "maxLon": 105.686780,
+                        "maxLat": 20.514644
+                      }
+                    },
+                  ]);
+                  if (layer2 != null) {
+                    widget.map.currentState?.call("Layers.add", args: [layer2]);
+                  }
                 },
               ),
             ],
-          ),
-          Positioned(
-            top: 15,
-            right: 10,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: const CircleBorder(),
-                padding: const EdgeInsets.all(8.0),
-              ),
-              onPressed: () {
-                mapSwitch = !mapSwitch;
-                if (mapSwitch == true) {
-                  widget.map.currentState?.call("Layers.clear");
-                  widget.map.currentState?.call("Layers.add",
-                      args: [Sphere.SphereStatic("Layers", "IMAGES")]);
-                } else {
-                  widget.map.currentState?.call("Layers.clear");
-                }
-              },
-              child: const Icon(
-                Icons.layers_rounded,
-                color: Colors.white,
-              ),
-            ),
           ),
         ],
       ),
